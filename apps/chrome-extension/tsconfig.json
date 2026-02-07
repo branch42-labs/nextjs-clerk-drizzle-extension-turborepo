@@ -1,13 +1,28 @@
 {
   "extends": "../../tooling/typescript/base.json",
-  "exclude": ["node_modules"],
-  "include": [".plasmo/index.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    ".plasmo/index.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
+    ],
     "jsx": "react-jsx",
-    "types": ["chrome"],
+    "types": [
+      "chrome",
+      "node"
+    ],
     "paths": {
-      "~*": ["./src/*"]
+      "~*": [
+        "./src/*"
+      ]
     },
     "baseUrl": "."
   }

@@ -1,6 +1,7 @@
 import type { WebhookEvent } from "@clerk/nextjs/server";
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { verifyWebhook } from "@clerk/backend/webhooks";
+import { verifyWebhook } from "@clerk/nextjs/webhooks";
 
 import { eq } from "@acme/db";
 import { db } from "@acme/db/client";
@@ -35,11 +36,13 @@ function getDisplayName(event: WebhookEvent) {
     .join(" ")
     .trim();
 
+  if (fullName) return fullName;
+
   return (
-    fullName ||
-    event.data.username ||
-    getEmailFromEvent(event)?.email_address ||
-    "Unknown"
+    event.data.username ?? getEmailFromEvent(event)?.email_address ?? "Unknown"
+
+
+
   );
 }
 
@@ -61,7 +64,7 @@ async function upsertClerkUser(event: WebhookEvent) {
     .values({
       id: event.data.id,
       email: primaryEmail.email_address,
-      emailVerified: primaryEmail.verification.status === "verified",
+      emailVerified: primaryEmail.verification?.status === "verified",
       name: getDisplayName(event),
       image: event.data.image_url,
       createdAt,
@@ -71,7 +74,7 @@ async function upsertClerkUser(event: WebhookEvent) {
       target: user.id,
       set: {
         email: primaryEmail.email_address,
-        emailVerified: primaryEmail.verification.status === "verified",
+        emailVerified: primaryEmail.verification?.status === "verified",
         image: event.data.image_url,
         name: getDisplayName(event),
         updatedAt,
@@ -87,7 +90,7 @@ async function deleteClerkUser(event: WebhookEvent) {
   await db.delete(user).where(eq(user.id, event.data.id));
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   if (!env.CLERK_WEBHOOK_SIGNING_SECRET) {
     console.error("Missing CLERK_WEBHOOK_SIGNING_SECRET");
     return NextResponse.json(
@@ -99,9 +102,9 @@ export async function POST(request: Request) {
   let event: WebhookEvent;
 
   try {
-    event = (await verifyWebhook(request, {
+    event = await verifyWebhook(request, {
       signingSecret: env.CLERK_WEBHOOK_SIGNING_SECRET,
-    })) as WebhookEvent;
+    });
   } catch (error) {
     console.error("Failed to verify Clerk webhook", error);
     return NextResponse.json(
