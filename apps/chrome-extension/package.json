@@ -1,0 +1,25 @@
+{
+  "name": "@acme/chrome-extension",
+  "private": true,
+  "version": "0.0.1",
+  "displayName": "Rely AI Extension",
+  "description": "Rely AI Chrome extension powered by Plasmo.",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package"
+  },
+  "dependencies": {
+    "@clerk/chrome-extension": "latest",
+    "react": "19.1.4",
+    "react-dom": "19.1.4"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.36",
+    "@types/node": "catalog:",
+    "@types/react": "~19.1.0",
+    "@types/react-dom": "~19.1.0",
+    "plasmo": "^0.90.5",
+    "typescript": "catalog:"
+  }
+}
