@@ -40,9 +40,6 @@ function getDisplayName(event: WebhookEvent) {
 
   return (
     event.data.username ?? getEmailFromEvent(event)?.email_address ?? "Unknown"
-
-
-
   );
 }
 

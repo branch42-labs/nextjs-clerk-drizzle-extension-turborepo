@@ -28,7 +28,7 @@ import { db } from "@acme/db/client";
 
 interface RequestAuth {
   userId: string | null;
-};
+}
 
 function getSessionTokenFromCookieHeader(cookieHeader: string) {
   const cookies = cookieHeader.split(";");
